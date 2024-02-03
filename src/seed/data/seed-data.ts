@@ -1,3 +1,5 @@
+import * as bcrypt from 'bcrypt';
+
 interface User {
   email: string;
   password: string;
@@ -19,7 +21,7 @@ interface Post {
 const usersSeed: User[] = [
   {
     email: 'usuario1@email.com',
-    password: 'contrasena1',
+    password: bcrypt.hashSync( 'Abc123', 10 ),
     fullName: 'Usuario Uno',
     age: 25,
     isActive: true,
@@ -28,7 +30,7 @@ const usersSeed: User[] = [
   },
   {
     email: 'usuario2@email.com',
-    password: 'contrasena2',
+    password: bcrypt.hashSync( 'Abc123', 10 ),
     fullName: 'Usuario Dos',
     age: 30,
     isActive: true,
@@ -37,7 +39,7 @@ const usersSeed: User[] = [
   },
   {
     email: 'usuario3@email.com',
-    password: 'contrasena3',
+    password: bcrypt.hashSync( 'Abc123', 10 ),
     fullName: 'Usuario Tres',
     age: 22,
     isActive: true,
@@ -46,7 +48,7 @@ const usersSeed: User[] = [
   },
   {
     email: 'usuario4@email.com',
-    password: 'contrasena4',
+    password: bcrypt.hashSync( 'Abc123', 10 ),
     fullName: 'Usuario Cuatro',
     age: 28,
     isActive: true,
@@ -55,7 +57,7 @@ const usersSeed: User[] = [
   },
   {
     email: 'usuario5@email.com',
-    password: 'contrasena5',
+    password: bcrypt.hashSync( 'Abc123', 10 ),
     fullName: 'Usuario Cinco',
     age: 35,
     isActive: true,
