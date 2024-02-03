@@ -25,15 +25,28 @@ export class User {
     })
     Age: number;
 
+    @Column('bool', {
+        default: true
+    })
+    isActive: boolean;
 
-    @BeforeInsert()
-    checkFieldsBeforeInsert() {
-        this.email = this.email.toLowerCase().trim();
-    }
+    @Column('text', {
+        array: true,
+        default: ['user']
+    })
+    roles: string[];
 
-    @BeforeUpdate()
-    checkFieldsBeforeUpdate() {
-        this.checkFieldsBeforeInsert();   
-    }
+    @Column('date')
+    createdAt: Date;
+
+    @Column('date', {
+        nullable: true
+    })
+    updatedAt: Date;
+
+    @Column('date', {
+        nullable: true
+    })
+    deletedAt: Date;
 
 }
