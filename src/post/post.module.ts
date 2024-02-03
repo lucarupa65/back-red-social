@@ -8,9 +8,7 @@ import { AuthModule } from 'src/auth/auth.module';
 @Module({
   controllers: [PostController],
   providers: [PostService],
-  imports: [
-    TypeOrmModule.forFeature([Post]),
-    AuthModule
-  ]
+  imports: [TypeOrmModule.forFeature([Post]), AuthModule],
+  exports: [TypeOrmModule, PostService],
 })
 export class PostModule {}
