@@ -7,9 +7,12 @@ import {
   Param,
   Delete,
   ParseUUIDPipe,
+  Query,
 } from '@nestjs/common';
 
 import { Auth, GetUser } from 'src/auth/decorators';
+import { PaginationDto } from 'src/common/dtos/pagination.dto';
+
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
@@ -26,13 +29,13 @@ export class PostController {
   }
 
   @Get()
-  findAll() {
-    return this.postService.findAll();
+  findAll(@Query() paginationDto: PaginationDto) {
+    return this.postService.findAll(paginationDto);
   }
 
   @Get(':id')
   findOne(@Param('id', ParseUUIDPipe) id: string, @GetUser() user: User) {
-    return this.postService.findOne(+id);
+    return this.postService.findOne(id);
   }
 
   @Patch(':id')
@@ -41,11 +44,11 @@ export class PostController {
     @Body() updatePostDto: UpdatePostDto,
     @GetUser() user: User,
   ) {
-    return this.postService.update(+id, updatePostDto, user);
+    return this.postService.update(id, updatePostDto, user);
   }
 
   @Delete(':id')
   remove(@Param('id', ParseUUIDPipe) id: string, @GetUser() user: User) {
-    return this.postService.remove(+id, user);
+    return this.postService.remove(id, user);
   }
 }

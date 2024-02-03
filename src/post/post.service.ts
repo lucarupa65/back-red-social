@@ -3,6 +3,8 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -12,6 +14,7 @@ import { UpdatePostDto } from './dto/update-post.dto';
 
 import { Post } from './entities/post.entity';
 import { User } from 'src/auth/entities/user.entity';
+import { PaginationDto } from 'src/common/dtos/pagination.dto';
 
 @Injectable()
 export class PostService {
@@ -38,20 +41,55 @@ export class PostService {
     }
   }
 
-  findAll() {
-    return `This action returns all post`;
+  async findAll(paginationDto: PaginationDto): Promise<Post[]> {
+    const { limit = 10, offset = 0 } = paginationDto;
+    const post = await this.postRepository.find({
+      take: limit,
+      skip: offset,
+      relations: {
+        user: true,
+      },
+      where: {
+        isActive: true,
+      },
+    });
+    return post;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} post`;
+  async findOne(id: string): Promise<Post> {
+    const post = await this.postRepository.findOneBy({ id });
+
+    if (!post) throw new NotFoundException(`Post con ${id} no encontrado`);
+    return post;
   }
 
-  update(id: number, updatePostDto: UpdatePostDto, currentUser: User) {
-    return `This action updates a #${id} post`;
+  async update(id: string, updatePostDto: UpdatePostDto, currentUser: User) {
+    const post = await this.postRepository.preload({
+      id: id,
+      ...updatePostDto,
+    });
+
+    if (!post) throw new NotFoundException(`Post con ${id} no encontrado`);
+    if (post.user != currentUser)
+      throw new UnauthorizedException(
+        'El usuario no tiene permiso para editar este post',
+      );
+
+    post.updatedAt = new Date();
+    await this.postRepository.save(post);
+    return post;
   }
 
-  remove(id: number, currentUser: User) {
-    return `This action removes a #${id} post`;
+  async remove(id: string, currentUser: User): Promise<boolean> {
+    const post = await this.findOne(id);
+
+    post.isActive = false;
+
+    await this.postRepository.save(post);
+
+    await this.postRepository.softDelete(post);
+
+    return true;
   }
 
   private handleDBExceptions(error: any) {
@@ -61,5 +99,15 @@ export class PostService {
     throw new InternalServerErrorException(
       'Unexpected error, check server logs',
     );
+  }
+
+  async deleteAllPost() {
+    const query = this.postRepository.createQueryBuilder('post');
+
+    try {
+      return await query.delete().where({}).execute();
+    } catch (error) {
+      this.handleDBExceptions(error);
+    }
   }
 }

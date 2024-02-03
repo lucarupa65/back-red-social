@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { SeedModule } from './seed/seed.module';
 import { UserModule } from './user/user.module';
 import { PostModule } from './post/post.module';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
@@ -26,7 +27,8 @@ import { PostModule } from './post/post.module';
     AuthModule,
     SeedModule,
     UserModule,
-    PostModule
+    PostModule,
+    CommonModule
   ],
   controllers: [AppController],
   providers: [AppService],
