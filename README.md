@@ -13,16 +13,27 @@ La base de datos está contenida en docker y para ejecutar el proyecto sigue los
 $ docker-compose up -d
 ```
 
-## Ejecuta el siguiente comando para instalar las dependencias.
+## 3. Ejecuta el siguiente comando para instalar las dependencias.
 
 ```bash
 $ yarn install
 ```
 
-## Ejecuta el siguiente comando para ejecutar la aplicación.
+## 4. Ejecuta el siguiente comando para ejecutar la aplicación.
 
 ```bash
 $ yarn run start
 ```
+## 5. Cuando la aplicación se esté ejecutando, visitar la siguiente Url para ejecutar los Seed
 
+```bash
+http://localhost:3000/api/seed
+```
+
+## Usuarios
+
+```bash
+User: usuario1@email.com
+Pass: Abc123
+```
 
