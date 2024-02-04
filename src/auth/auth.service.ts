@@ -37,7 +37,7 @@ export class AuthService {
       delete user.password;
 
       return {
-        ...user,
+        user,
         token: this.getJwtToken({ id: user.id }),
       };
     } catch (error) {
@@ -50,7 +50,7 @@ export class AuthService {
 
     const user = await this.userRepository.findOne({
       where: { email },
-      select: { email: true, password: true, id: true },
+      select: { email: true, password: true, id: true, isActive: true, fullName: true },
     });
 
     if (!user)
@@ -63,8 +63,9 @@ export class AuthService {
         'Las credenciales no son válidas (password)',
       );
 
+    delete user.password;
     return {
-      ...user,
+      user,
       token: this.getJwtToken({ id: user.id }),
     };
   }
@@ -72,7 +73,7 @@ export class AuthService {
   async checkAuthStatus( user: User ){
 
     return {
-      ...user,
+      user,
       token: this.getJwtToken({ id: user.id })
     };
 
