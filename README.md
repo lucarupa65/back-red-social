@@ -36,4 +36,8 @@ http://localhost:3000/api/seed
 User: usuario1@email.com
 Pass: Abc123
 ```
+## Docmunetacion
 
+```bash
+http://localhost:3000/api
+```

@@ -8,11 +8,14 @@ import {
   Delete,
   ParseUUIDPipe,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Auth, GetUser } from 'src/auth/decorators';
 import { User } from 'src/auth/entities/user.entity';
 
+@ApiTags('User')
 @Controller('user')
 @Auth()
 export class UserController {
