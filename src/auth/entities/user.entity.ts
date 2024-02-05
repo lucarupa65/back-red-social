@@ -64,7 +64,7 @@ export class User {
   })
   roles: string[];
 
-  @ApiProperty()
+  // @ApiProperty()
   @OneToMany(() => Post, (post) => post.user, { cascade: true })
   pots?: Post;
 

@@ -43,7 +43,9 @@ export class Post {
   })
   like: number;
 
-  // @ApiProperty()
+  @ApiProperty({
+    type: () => User
+  })
   @ManyToOne(() => User, (user) => user.pots)
   user: User;
 
