@@ -9,7 +9,7 @@ import {
   ParseUUIDPipe,
   Query,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiForbiddenResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { Auth, GetUser } from 'src/auth/decorators';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
@@ -28,27 +28,31 @@ export class PostController {
   constructor(private readonly postService: PostService) {}
 
   @Post()
-  @ApiResponse({ status: 201, description: 'Post Creado', type: PostEntity })
-  @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiCreatedResponse({ description: 'Post Creado', type: PostEntity })
+  @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiForbiddenResponse({ description: 'Forbidden. Token invalido'})
   create(@Body() createPostDto: CreatePostDto, @GetUser() user: User) {
     return this.postService.create(createPostDto, user);
   }
 
   @Get()
-  @ApiResponse({ status: 200, description: 'Listado de Post Paginado' })
+  @ApiOkResponse({ description: 'Listado de Post Paginado', type: [PostEntity] })
   @ApiForbiddenResponse({ description: 'Forbidden. Token invalido'})
   findAll(@Query() paginationDto: PaginationDto) {
     return this.postService.findAll(paginationDto);
   }
 
   @Get(':id')
+  @ApiOkResponse({ description: 'Post deseado', type: PostEntity })
+  @ApiNotFoundResponse({description:'Post no encontrado'})
   @ApiForbiddenResponse({ description: 'Forbidden. Token invalido'})
   findOne(@Param('id', ParseUUIDPipe) id: string, @GetUser() user: User) {
     return this.postService.findOne(id);
   }
 
   @Patch(':id')
+  @ApiOkResponse({ description: 'Post actualizado', type: PostEntity })
+  @ApiNotFoundResponse({description:'Post no encontrado'})
   @ApiForbiddenResponse({ description: 'Forbidden. Token invalido'})
   update(
     @Param('id', ParseUUIDPipe) id: string,
@@ -59,6 +63,8 @@ export class PostController {
   }
 
   @Delete(':id')
+  @ApiOkResponse({ description: 'Post Eliminado', type: Boolean })
+  @ApiNotFoundResponse({description:'Post no encontrado'})
   @ApiForbiddenResponse({ description: 'Forbidden. Token invalido'})
   remove(@Param('id', ParseUUIDPipe) id: string, @GetUser() user: User) {
     return this.postService.remove(id, user);
